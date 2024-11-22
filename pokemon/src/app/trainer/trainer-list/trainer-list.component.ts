@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Trainer } from '../Trainer';
-import { dataTrainers } from '../dataTrainers';
+import { TrainerService } from '../trainer.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-trainer-list',
@@ -9,20 +10,16 @@ import { dataTrainers } from '../dataTrainers';
 })
 export class TrainerListComponent implements OnInit {
   trainers: Array<Trainer> = [];
-  selected: Boolean = false;
-  selectedTrainer!: Trainer;
-  constructor() {}
 
-  getTraunersList(): Array<Trainer> {
-    return dataTrainers;
+  constructor(private trainerService: TrainerService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.trainerService.getTrainers().subscribe((data) => {
+      this.trainers = data;
+    });
   }
 
-  ngOnInit() {
-    this.trainers = this.getTraunersList();
-  }
-
-  onSelected(trainer: Trainer) {
-    this.selected = true;
-    this.selectedTrainer = trainer;
+  onSelected(trainerId: number) {
+    this.router.navigate([`/trainers/${trainerId}`]); 
   }
 }

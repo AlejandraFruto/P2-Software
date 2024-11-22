@@ -1,28 +1,31 @@
-/* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TrainerService } from '../trainer.service';
 
-import { TrainerDetailComponent } from './trainer-detail.component';
+@Component({
+  selector: 'app-trainer-detail',
+  templateUrl: './trainer-detail.component.html',
+  styleUrls: ['./trainer-detail.component.css']
+})
+export class TrainerDetailComponent implements OnInit {
+  @Input() trainerDetail: any; 
+  trainerId: number | null = null; 
 
-describe('TrainerDetailComponent', () => {
-  let component: TrainerDetailComponent;
-  let fixture: ComponentFixture<TrainerDetailComponent>;
+  constructor(
+    private route: ActivatedRoute,
+    private trainerService: TrainerService
+  ) {}
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TrainerDetailComponent ]
-    })
-    .compileComponents();
-  }));
+  ngOnInit(): void {
+   
+    this.trainerId = this.route.snapshot.paramMap.get('id') 
+      ? +this.route.snapshot.paramMap.get('id')! 
+      : null;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TrainerDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    if (this.trainerId) {
+      this.trainerService.getTrainerDetails(this.trainerId).subscribe((data) => {
+        this.trainerDetail = data;
+      });
+    }
+  }
+}
