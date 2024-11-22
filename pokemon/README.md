@@ -1,8 +1,3 @@
-#Estudiante
-Nombre: Alejandra Fruto Osorio
-Código: 202311287
-
-
 
 # Pokemon
 
